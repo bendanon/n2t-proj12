@@ -9,45 +9,33 @@ class Main {
     /** Performs several memory manipulations. */
     function void main() {
         var int temp;
-        var Array a, b, c;
+        var Array a, b, c, d, e;
         
-        do Memory.poke(8000, 333);       // RAM[8000] = 333
-        let temp = Memory.peek(8000);
-        do Memory.poke(8001, temp + 1);  // RAM[8001] = 334
-        
-        do Memory.printList(); 
-        let a = Array.new(5000);            // uses Memory.alloc
-        do Memory.printList();                                      //1
-        let a[2] = 222;
-        do Memory.poke(8002, a[2]);      // RAM[8002] = 222
-        
-        let b = Array.new(5000);
-        do Memory.printList();                                      //2
-        let b[1] = a[2] - 100;
-        do Memory.poke(8003, b[1]);       // RAM[8003] = 122
-        
+        let a = Array.new(4000);
+        do Memory.printList();
+        let b = Array.new(2000);
+        do Memory.printList();
         let c = Array.new(4000);
-        do Memory.printList();                                      //3
-        let c[499] = a[2] - b[1];
-        do Memory.poke(8004, c[499]);     // RAM[8004] = 100
-        
-        do a.dispose();                   // uses Memory.deAlloc
-        do Memory.printList();                                      //4
+        do Memory.printList();
+        let d = Array.new(2000);
+        do Memory.printList();
+        let e = Array.new(2000);
+        do Memory.printList();
+        do a.dispose();
         do b.dispose();
-        do Memory.printList();                                      //5
-        
-        let b = Array.new(7000);
-        do Memory.printList();                                      //6
-        let b[0] = c[499] - 90;
-        do Memory.poke(8005, b[0]);       // RAM[8005] = 10
-        
         do c.dispose();
-        do Memory.printList();                                      //7
-        do b.dispose();
-        do Memory.printList();                                      //8
-        let a = Array.new(14333); 
-       
-        do Memory.printList();                                      //9
+        do d.dispose();
+        do e.dispose();
+        do Memory.printList();
+        let a = Array.new(6000);
+        do Memory.printList();
+        let b = Array.new(4000);
+         do Memory.printList();
+        do c.dispose();
+        let d = Array.new(4000);
+        do Memory.printList();
+        //do Output.println();
+        //do Output.printInt(d);
         return;
     }
 

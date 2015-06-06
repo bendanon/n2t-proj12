@@ -38,10 +38,12 @@ class Memory {
         let block = nFreeList;
         while(~(block = 0))
         {
-            let sum = sum + Memory.peek(block);
+            do Output.printInt(7777);
+            do Output.printInt(Memory.peek(block));
+            //let sum = sum + Memory.peek(block);
             let block = Memory.peek(block + 1);
         }
-        do Output.printInt(sum);
+        //do Output.printInt(sum);
         do Output.println();
         return;
     }
@@ -50,15 +52,22 @@ class Memory {
         var int block, slack, slackSize, prev, blockSize ,next;
 
         let blockSize = Memory.peek(nFreeList);
- 
+        
         if(~(blockSize < size))
         {
             let block = nFreeList;
             let next = Memory.peek(block + 1);
             let slackSize = blockSize - size;
-            let nFreeList = nFreeList + size + 1;
-            do Memory.poke(nFreeList, slackSize);
-            do Memory.poke(nFreeList + 1, next);
+            if(slackSize > 0)
+            {
+                let nFreeList = nFreeList + size + 1;
+                do Memory.poke(nFreeList, slackSize);
+                do Memory.poke(nFreeList + 1, next);
+            }
+            else
+            {
+                let nFreeList = next;   
+            }            
         }
         else
         {
@@ -76,7 +85,7 @@ class Memory {
                 let blockSize = Memory.peek(block);
             }
         
-            let slackSize = blockSize - size - 2;        
+            let slackSize = blockSize - size;        
             if(slackSize > 0)
             {            
                 do Memory.poke(block, slackSize);
@@ -164,7 +173,8 @@ class Memory {
                 let concatenatedBlocks = concatenatedBlocks + 1;
             }
             else
-            {                    
+            {
+                let concatenatedBlocks = 1; 
                 let prev = block;
             }
 
