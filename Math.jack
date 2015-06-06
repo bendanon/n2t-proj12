@@ -7,32 +7,170 @@
  * A basic math library.
  */
 class Math {
-
+	static int MaxInt;
+	static int MaxSquare;
+	static int MaxSquareRoot;
+	
     /** Initializes the library. */
     function void init() {
-    }
+		let MaxInt = 32767;
+		let MaxSquare = 32761;
+		let MaxSquareRoot = 181;
+		return;
+	}
 
     /** Returns the absolute value of x. */
     function int abs(int x) {
+		if (x < 0) {
+			return -x;
+		}
+		return x;
     }
 
     /** Returns the product of x and y. */
     function int multiply(int x, int y) {
+		var int sum, y_mask, abs_x, abs_y;
+		
+		let abs_x = Math.abs(x);
+		let abs_y = Math.abs(y);
+		let sum = 0;
+		let y_mask = 1;
+				
+		while ((~(abs_y < y_mask)) & (y_mask > 0)) {
+			if (abs_y & y_mask) {
+				let sum = sum + abs_x; 
+			}
+			let abs_x = abs_x + abs_x;
+			let y_mask = y_mask + y_mask;
+		}
+		
+		// Correct sign:
+		if (((x < 0) & (y > 0)) | ((x > 0) & (y < 0))) {
+			return -sum;
+		}
+		return sum;		
     }
 
     /** Returns the integer part of x/y. */
     function int divide(int x, int y) {
+		// Runtime complexity is still O(n);
+		
+		var int abs_x, abs_y, abs_y_times_2, result, remainder;
+		
+		if (y = 0) { // Division by zero
+			do Sys.error(3); 
+		}
+				
+		let abs_x = Math.abs(x);
+		let abs_y = Math.abs(y);
+		
+		if (abs_y > abs_x) {
+			return 0;
+		}
+		
+		// 0 < abs_y <= abs_x ...
+		
+		let result = 0;
+		// Recursive call:
+		let abs_y_times_2 = Math.posOrMax(abs_y * 2);
+		if (~ (abs_y_times_2 > abs_x)) {
+			let result = Math.divide(abs_x, abs_y_times_2) * 2;
+			let abs_y_times_2 = abs_y * 2;
+		}
+						
+		let remainder = abs_x - (result * abs_y);
+		if (~(remainder < abs_y)) {
+			let result = result + 1;
+		}
+		
+		// Correct sign:
+		if (((x < 0) & (y > 0)) | ((x > 0) & (y < 0))) {
+			return -result;
+		}
+		return result;	
     }
 
     /** Returns the integer part of the square root of x. */
     function int sqrt(int x) {
+		var int lower, upper, y, n, y_plus_1, y_minus_1, y_y, y_1_y_1;		
+		
+		// Cannot compute square root of a negative number
+		if (x < 0) { do Sys.error(4); }
+		if (x = 0) { return 0; }
+		if (x > (MaxSquare - 1)) { return MaxSquareRoot; }
+		
+		// x > 0
+		
+		// Computing n
+		let n = 1;
+		let upper = 2;
+		while (upper < x) {
+			let n = n + 1;
+			let upper = Math.posOrMax(upper * 2);
+		}
+				
+		// Computing upper
+		if ((n & 1) = 1) { // if n is odd
+			let n = n + 1;
+		}
+		let n = n / 2;
+		let upper = 1;
+		while (n > 0) {
+			let upper = upper * 2;
+			let n = n - 1;
+		}
+		let upper = upper - 1;
+		if (upper > MaxSquareRoot) {
+			let upper = MaxSquareRoot;
+		}
+
+		// Binary search
+		let lower = 1;
+		
+		let y = (lower + upper) / 2;
+		let y_plus_1 = Math.posOrMax(y + 1);
+		let y_minus_1 = y - 1;
+		let y_y = Math.posOrMax(y * y);
+		let y_1_y_1 = Math.posOrMax(y_plus_1 * y_plus_1);
+		
+		while ((x < y_y) | (~(x < y_1_y_1))) {
+			if (~(x < y_1_y_1))
+			{
+				let lower = y_plus_1;
+			}
+			else {
+				let upper = y_minus_1;
+			}
+			
+			let y = (lower + upper) / 2;
+			let y_plus_1 = Math.posOrMax(y + 1);
+			let y_minus_1 = y - 1;
+			let y_y = Math.posOrMax(y * y);
+			let y_1_y_1 = Math.posOrMax(y_plus_1 * y_plus_1);
+		}
+		return y;
     }
 
+	function int posOrMax(int x) {
+		if (x < 0) {
+			return MaxInt;
+		}
+		return x;		
+	}
+	
     /** Returns the greater number. */
     function int max(int a, int b) {
+		if (a > b) {
+			return a;
+		}
+		return b;
     }
 
     /** Returns the smaller number. */
     function int min(int a, int b) {
+		if (a < b) {
+			return a;
+		}
+		return b;
     }
 }

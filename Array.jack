@@ -10,9 +10,14 @@ class Array {
 
     /** Constructs a new Array of the given size. */
     function Array new(int size) {
+		//Array size must be positive
+		if (size < 0) { do Sys.error(2); }
+		return Memory.alloc(size);
     }
 
     /** De-allocates the array and frees its space. */
     method void dispose() {
+		do Memory.deAlloc(this);
+		return;
     }
 }
