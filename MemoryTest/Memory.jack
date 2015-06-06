@@ -33,39 +33,26 @@ class Memory {
 
     function void printList()
     {
-        var int block;
+        var int block, sum;
         
-        do Output.println();
         let block = nFreeList;
         while(~(block = 0))
         {
-            do Output.printInt(1111);
-            do Output.printInt(block);
-            do Output.printInt(1111);
-            if(block = Memory.peek(block + 1))
-            {
-                do Output.printInt(1111);
-                do Output.printInt(block);
-                do Output.printInt(1111);
-                do Output.println();
-                return;
-            }
+            let sum = sum + Memory.peek(block);
             let block = Memory.peek(block + 1);
         }
-        do Output.println();
+        //do Output.printInt(sum);
+        //do Output.println();
         return;
     }
 
     function int _alloc(int size) {
         var int block, slack, slackSize, prev, blockSize ,next;
 
-        do Output.printInt(1);
-
         let blockSize = Memory.peek(nFreeList);
  
         if(~(blockSize < size))
         {
-            do Output.printInt(2);
             let block = nFreeList;
             let next = Memory.peek(block + 1);
             if(~(next = 0))
@@ -79,21 +66,18 @@ class Memory {
         }
         else
         {
-            do Output.printInt(3);
             let prev = nFreeList;
             let block = Memory.peek(prev + 1);
             let blockSize = Memory.peek(block);
-
             while(~(block = 0) & blockSize < size) 
             {
                 let prev = block;
                 let block = Memory.peek(block + 1);
+                if(block = 0)
+                {
+                    return 0;
+                }
                 let blockSize = Memory.peek(block);
-            }
-
-            if(block = 0)
-            {
-                return 0;
             }
         
             let slackSize = blockSize - size - 2;        
@@ -111,9 +95,6 @@ class Memory {
 
         do Memory.poke(block, size);
 
-        do Output.printInt(1);
-        do Output.println();
-
         return block + 1;
     }
 
@@ -129,7 +110,7 @@ class Memory {
             do Memory.deFrag();
             let block = Memory._alloc(size);
             if(block = 0)
-            {
+            {   
                 return 0;
             }
         }
@@ -167,9 +148,11 @@ class Memory {
 
     /** Unifies adjacent blocks in the freelist if possible*/
     function void deFrag() {
-        var int block, prev, next, prevSize;
-        
-        do Output.printInt(1111); 
+        var int block, prev, next, prevSize, concatenatedBlocks;
+
+        //do Output.println();
+            
+        let concatenatedBlocks = 1;
         let prev = nFreeList;
         let block = Memory.peek(prev + 1);
 
@@ -178,19 +161,30 @@ class Memory {
             let next = Memory.peek(block + 1);
             let prevSize = Memory.peek(prev);
 
-            if((prev + prevSize) = block)
-            {
-                do Memory.poke(prev, prevSize + Memory.peek(block) + 2);
+            if((prev + prevSize + concatenatedBlocks) = block)
+            {                
+                do Memory.poke(prev, prevSize + Memory.peek(block));
                 do Memory.poke(prev + 1, next);
+                let concatenatedBlocks = concatenatedBlocks + 1;
             }
             else
             {
+                do Output.println();
+                do Output.printInt(prev);
+                do Output.println();
+                do Output.printInt(prevSize);
+                do Output.println();
+                do Output.printInt(concatenatedBlocks);
+                do Output.println();
+                do Output.printInt(block);
+                do Output.println();
+                    
                 let prev = block;
             }
 
             let block = next; 
-        }   
-        
+        }
+
         return;
     }
     
