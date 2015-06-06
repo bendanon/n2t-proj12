@@ -1,0 +1,197 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/12/Memory.jack
+
+/**
+ * Memory operations library.
+ */ 
+class Memory {
+    static int nFreeList;
+    static Array memory;
+
+    /** Initializes memory parameters. 2048 - 16383*/
+    function void init() {        
+        let nFreeList = 2048;
+        do Memory.poke(nFreeList, 16383 - 2048 - 2);
+        return;        
+    }
+
+    /** Returns the value of the main memory at the given address. */
+    function int peek(int address) {
+        let memory = 0;
+        return memory[address];
+    }
+
+    /** Sets the value of the main memory at this address
+     *  to the given value. */
+    function void poke(int address, int value) {
+        let memory = 0;
+        let memory[address] = value;
+        return;
+    }
+
+    function void printList()
+    {
+        var int block;
+        
+        do Output.println();
+        let block = nFreeList;
+        while(~(block = 0))
+        {
+            do Output.printInt(1111);
+            do Output.printInt(block);
+            do Output.printInt(1111);
+            if(block = Memory.peek(block + 1))
+            {
+                do Output.printInt(1111);
+                do Output.printInt(block);
+                do Output.printInt(1111);
+                do Output.println();
+                return;
+            }
+            let block = Memory.peek(block + 1);
+        }
+        do Output.println();
+        return;
+    }
+
+    function int _alloc(int size) {
+        var int block, slack, slackSize, prev, blockSize ,next;
+
+        do Output.printInt(1);
+
+        let blockSize = Memory.peek(nFreeList);
+ 
+        if(~(blockSize < size))
+        {
+            do Output.printInt(2);
+            let block = nFreeList;
+            let next = Memory.peek(block + 1);
+            if(~(next = 0))
+            {
+                let next = Memory.peek(next + 1);
+            }
+            let slackSize = blockSize - size;
+            let nFreeList = nFreeList + size + 1;
+            do Memory.poke(nFreeList, slackSize);
+            do Memory.poke(nFreeList + 1, next);
+        }
+        else
+        {
+            do Output.printInt(3);
+            let prev = nFreeList;
+            let block = Memory.peek(prev + 1);
+            let blockSize = Memory.peek(block);
+
+            while(~(block = 0) & blockSize < size) 
+            {
+                let prev = block;
+                let block = Memory.peek(block + 1);
+                let blockSize = Memory.peek(block);
+            }
+
+            if(block = 0)
+            {
+                return 0;
+            }
+        
+            let slackSize = blockSize - size - 2;        
+            if(slackSize > 0)
+            {            
+                do Memory.poke(block, slackSize);
+                let block = block + slackSize;
+            }
+            else
+            {
+                //Repair the free list
+                do Memory.poke(prev + 1, Memory.peek(block + 1));
+            }
+        }
+
+        do Memory.poke(block, size);
+
+        do Output.printInt(1);
+        do Output.println();
+
+        return block + 1;
+    }
+
+     /** finds and allocates from the heap a memory block of the
+     *  specified size and returns a reference to its base address. */
+    function int alloc(int size) {
+        var int block;
+         
+        let block = Memory._alloc(size);         
+        
+        if(block = 0)
+        {
+            do Memory.deFrag();
+            let block = Memory._alloc(size);
+            if(block = 0)
+            {
+                return 0;
+            }
+        }
+
+        return block;
+    }
+
+    
+
+    /** De-allocates the given object and frees its space. */
+    function void deAlloc(int object) {
+        var int block, prev, next;
+        
+        if(object < nFreeList)
+        {                       
+            do Memory.poke(object, nFreeList);
+            let nFreeList = object - 1;                
+        }
+        else
+        {
+            let prev = nFreeList;
+            let block = Memory.peek(prev + 1);
+            
+            while(~(block = 0) & ~(prev < object & object < block))
+            {
+                let prev = block;
+                let block = Memory.peek(block + 1);
+            }
+            do Memory.poke(prev + 1, object - 1);
+            do Memory.poke(object, block);
+        }
+        
+        return;
+    }
+
+    /** Unifies adjacent blocks in the freelist if possible*/
+    function void deFrag() {
+        var int block, prev, next, prevSize;
+        
+        do Output.printInt(1111); 
+        let prev = nFreeList;
+        let block = Memory.peek(prev + 1);
+
+        while(~(block = 0))
+        { 
+            let next = Memory.peek(block + 1);
+            let prevSize = Memory.peek(prev);
+
+            if((prev + prevSize) = block)
+            {
+                do Memory.poke(prev, prevSize + Memory.peek(block) + 2);
+                do Memory.poke(prev + 1, next);
+            }
+            else
+            {
+                let prev = block;
+            }
+
+            let block = next; 
+        }   
+        
+        return;
+    }
+    
+}
