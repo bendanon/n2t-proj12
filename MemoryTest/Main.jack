@@ -45,8 +45,7 @@ class Main {
         do Memory.printList();                                      //7
         do b.dispose();
         do Memory.printList();                                      //8
-
-        let a = Array.new(14000); 
+        let a = Array.new(14333); 
        
         do Memory.printList();                                      //9
         return;

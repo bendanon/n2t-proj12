@@ -140,7 +140,7 @@ call Array.dispose 1
 pop temp 0
 call Memory.printList 0
 pop temp 0
-push constant 14000
+push constant 14333
 call Array.new 1
 pop local 1
 call Memory.printList 0

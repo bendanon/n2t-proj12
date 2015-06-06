@@ -55,6 +55,11 @@ call Memory.peek 1
 pop local 0
 goto WHILE_EXP0
 label WHILE_END0
+push local 1
+call Output.printInt 1
+pop temp 0
+call Output.println 0
+pop temp 0
 push constant 0
 return
 function Memory._alloc 6
@@ -75,19 +80,6 @@ push constant 1
 add
 call Memory.peek 1
 pop local 5
-push local 5
-push constant 0
-eq
-not
-if-goto IF_TRUE1
-goto IF_FALSE1
-label IF_TRUE1
-push local 5
-push constant 1
-add
-call Memory.peek 1
-pop local 5
-label IF_FALSE1
 push local 4
 push argument 0
 sub
@@ -141,12 +133,12 @@ pop local 0
 push local 0
 push constant 0
 eq
-if-goto IF_TRUE2
-goto IF_FALSE2
-label IF_TRUE2
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
 push constant 0
 return
-label IF_FALSE2
+label IF_FALSE1
 push local 0
 call Memory.peek 1
 pop local 4
@@ -161,9 +153,9 @@ pop local 2
 push local 2
 push constant 0
 gt
-if-goto IF_TRUE3
-goto IF_FALSE3
-label IF_TRUE3
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
 push local 0
 push local 2
 call Memory.poke 2
@@ -172,8 +164,8 @@ push local 0
 push local 2
 add
 pop local 0
-goto IF_END3
-label IF_FALSE3
+goto IF_END2
+label IF_FALSE2
 push local 3
 push constant 1
 add
@@ -183,7 +175,7 @@ add
 call Memory.peek 1
 call Memory.poke 2
 pop temp 0
-label IF_END3
+label IF_END2
 label IF_END0
 push local 0
 push argument 0
@@ -338,28 +330,6 @@ add
 pop local 4
 goto IF_END0
 label IF_FALSE0
-call Output.println 0
-pop temp 0
-push local 1
-call Output.printInt 1
-pop temp 0
-call Output.println 0
-pop temp 0
-push local 3
-call Output.printInt 1
-pop temp 0
-call Output.println 0
-pop temp 0
-push local 4
-call Output.printInt 1
-pop temp 0
-call Output.println 0
-pop temp 0
-push local 0
-call Output.printInt 1
-pop temp 0
-call Output.println 0
-pop temp 0
 push local 0
 pop local 1
 label IF_END0
