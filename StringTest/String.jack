@@ -8,36 +8,66 @@
  */
 class String {
     
-    field Array arr;
+    field Array m_arr;
+    field int m_size;
+    field int m_length;
 
     /** Constructs a new empty String with a maximum length of maxLength. */
     constructor String new(int maxLength) {
-        let arr = Array.new(maxLength + 1);
+        let m_arr = Array.new(maxLength);
+        let m_size = maxLength;
+        let m_length = 0;
     }
 
     /** De-allocates the string and frees its space. */
     method void dispose() {
+        arr.dispose();
+        return;
     }
 
     /** Returns the current length of this String. */
     method int length() {
+        return m_length;
     }
 
     /** Returns the character at location j. */
     method char charAt(int j) {
+        if(~(j < 0) & ~(m_size < j))
+        {
+            return m_arr[j];
+        }
+        
+        return 0;
     }
 
     /** Sets the j'th character of this string to be c. */
     method void setCharAt(int j, char c) {
+        if(~(j < 0) & ~(m_size < j))
+        {
+            let m_arr[j] = c;
+        }
+        return;
     }
 
     /** Appends the character c to the end of this String.
      *  Returns this string as the return value. */
     method String appendChar(char c) {
+        if(m_length < m_size)
+        {
+            let m_arr[m_length] = c;
+            let m_length = m_length + 1;
+        }
+
+        return this;
     }
 
     /** Erases the last character from this String. */
     method void eraseLastChar() {
+        if(0 < m_length)
+        {
+            let m_length = m_length - 1;
+            let m_arr[m_length] = "";
+        }
     }
 
     /** Returns the integer value of this String until the first non
