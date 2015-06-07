@@ -33,55 +33,17 @@ push temp 0
 pop that 0
 push constant 0
 return
-function Memory.printList 2
-push static 0
-pop local 0
-label WHILE_EXP0
-push local 0
-push constant 0
-eq
-not
-not
-if-goto WHILE_END0
-push constant 7777
-call Output.printInt 1
-pop temp 0
-push local 0
-call Memory.peek 1
-call Output.printInt 1
-pop temp 0
-push local 0
-push constant 1
-add
-call Memory.peek 1
-pop local 0
-goto WHILE_EXP0
-label WHILE_END0
-call Output.println 0
-pop temp 0
-push constant 0
-return
 function Memory._alloc 6
 push static 0
 call Memory.peek 1
 pop local 4
 push local 4
-push constant 0
-eq
-if-goto IF_TRUE0
-goto IF_FALSE0
-label IF_TRUE0
-push constant 8888
-call Output.printInt 1
-pop temp 0
-label IF_FALSE0
-push local 4
 push argument 0
 lt
 not
-if-goto IF_TRUE1
-goto IF_FALSE1
-label IF_TRUE1
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
 push static 0
 pop local 0
 push local 0
@@ -96,9 +58,9 @@ pop local 2
 push local 2
 push constant 0
 gt
-if-goto IF_TRUE2
-goto IF_FALSE2
-label IF_TRUE2
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
 push static 0
 push argument 0
 add
@@ -115,13 +77,13 @@ add
 push local 5
 call Memory.poke 2
 pop temp 0
-goto IF_END2
-label IF_FALSE2
-push local 5
-pop static 0
-label IF_END2
 goto IF_END1
 label IF_FALSE1
+push local 5
+pop static 0
+label IF_END1
+goto IF_END0
+label IF_FALSE0
 push static 0
 pop local 3
 push local 3
@@ -153,12 +115,12 @@ pop local 0
 push local 0
 push constant 0
 eq
-if-goto IF_TRUE3
-goto IF_FALSE3
-label IF_TRUE3
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
 push constant 0
 return
-label IF_FALSE3
+label IF_FALSE2
 push local 0
 call Memory.peek 1
 pop local 4
@@ -171,9 +133,9 @@ pop local 2
 push local 2
 push constant 0
 gt
-if-goto IF_TRUE4
-goto IF_FALSE4
-label IF_TRUE4
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
 push local 0
 push local 2
 call Memory.poke 2
@@ -182,8 +144,8 @@ push local 0
 push local 2
 add
 pop local 0
-goto IF_END4
-label IF_FALSE4
+goto IF_END3
+label IF_FALSE3
 push local 3
 push constant 1
 add
@@ -193,8 +155,8 @@ add
 call Memory.peek 1
 call Memory.poke 2
 pop temp 0
-label IF_END4
-label IF_END1
+label IF_END3
+label IF_END0
 push local 0
 push argument 0
 call Memory.poke 2
@@ -231,12 +193,23 @@ label IF_FALSE0
 push local 0
 return
 function Memory.deAlloc 3
-push argument 0
 push static 0
-lt
+push constant 0
+eq
 if-goto IF_TRUE0
 goto IF_FALSE0
 label IF_TRUE0
+push argument 0
+push constant 1
+sub
+pop static 0
+label IF_FALSE0
+push argument 0
+push static 0
+lt
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
 push argument 0
 push static 0
 call Memory.poke 2
@@ -245,8 +218,8 @@ push argument 0
 push constant 1
 sub
 pop static 0
-goto IF_END0
-label IF_FALSE0
+goto IF_END1
+label IF_FALSE1
 push static 0
 pop local 1
 push local 1
@@ -291,7 +264,7 @@ push argument 0
 push local 0
 call Memory.poke 2
 pop temp 0
-label IF_END0
+label IF_END1
 push constant 0
 return
 function Memory.deFrag 5

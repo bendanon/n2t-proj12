@@ -31,23 +31,6 @@ class Memory {
         return;
     }
 
-    function void printList()
-    {
-        var int block, sum;
-        
-        let block = nFreeList;
-        while(~(block = 0))
-        {
-            do Output.printInt(7777);
-            do Output.printInt(Memory.peek(block));
-            //let sum = sum + Memory.peek(block);
-            let block = Memory.peek(block + 1);
-        }
-        //do Output.printInt(sum);
-        do Output.println();
-        return;
-    }
-
     function int _alloc(int size) {
         var int block, slack, slackSize, prev, blockSize ,next;
 
@@ -87,7 +70,7 @@ class Memory {
         
             let slackSize = blockSize - size;        
             if(slackSize > 0)
-            {            
+            {   
                 do Memory.poke(block, slackSize);
                 let block = block + slackSize;
             }
@@ -128,11 +111,16 @@ class Memory {
     /** De-allocates the given object and frees its space. */
     function void deAlloc(int object) {
         var int block, prev, next;
-        
+       
+        if(nFreeList = 0)
+        {
+            let nFreeList = object - 1;        
+        } 
+    
         if(object < nFreeList)
-        {                       
+        {   
             do Memory.poke(object, nFreeList);
-            let nFreeList = object - 1;                
+            let nFreeList = object - 1;
         }
         else
         {
@@ -154,8 +142,6 @@ class Memory {
     /** Unifies adjacent blocks in the freelist if possible*/
     function void deFrag() {
         var int block, prev, next, prevSize, concatenatedBlocks;
-
-        //do Output.println();
             
         let concatenatedBlocks = 1;
         let prev = nFreeList;
