@@ -83,19 +83,46 @@ class String {
         return 0;
     }
 
+    method String int2string(int n){
+        var int lastDigit;
+        var String ret;
+        let lastDigit =  n - ((n / 10)*10);
+
+        if(n < 10)
+        {
+            return appendChar(n + 48);
+        }
+
+        let ret = int2string(n / 10);
+        return ret.appendChar(lastDigit + 48);
+    }
+    
     /** Sets this String to hold a representation of the given number. */
     method void setInt(int number) {
+        while(0 < m_length)
+        {
+            do eraseLastChar();
+        }
+        if(number < 0)
+        {
+            do appendChar(45);
+            do int2string(Math.abs(number));
+        }
+        else
+        {
+            do int2string(number);
+        }
         return;
     }
 
     /** Returns the new line character. */
     function char newLine() {
-        return 10;
+        return 128;
     }
 
     /** Returns the backspace character. */
     function char backSpace() {
-        return 8;
+        return 129;
     }
 
     /** Returns the double quote (") character. */
