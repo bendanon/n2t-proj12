@@ -14,14 +14,21 @@ class String {
 
     /** Constructs a new empty String with a maximum length of maxLength. */
     constructor String new(int maxLength) {
-        let m_arr = Array.new(maxLength);
-        let m_size = maxLength;
-        let m_length = 0;
+        if(maxLength > 0)
+        {
+            let m_arr = Array.new(maxLength);
+            let m_size = maxLength;
+            let m_length = 0;
+        }
+        return this;
     }
 
     /** De-allocates the string and frees its space. */
     method void dispose() {
-        arr.dispose();
+        if(0 < m_size)
+        {
+            do m_arr.dispose();
+        }
         return;
     }
 
@@ -32,7 +39,7 @@ class String {
 
     /** Returns the character at location j. */
     method char charAt(int j) {
-        if(~(j < 0) & ~(m_size < j))
+        if(~(j < 0) & ~(m_length < j))
         {
             return m_arr[j];
         }
@@ -66,28 +73,33 @@ class String {
         if(0 < m_length)
         {
             let m_length = m_length - 1;
-            let m_arr[m_length] = "";
         }
+        return;
     }
 
     /** Returns the integer value of this String until the first non
      *  numeric character. */
     method int intValue() {
+        return 0;
     }
 
     /** Sets this String to hold a representation of the given number. */
     method void setInt(int number) {
+        return;
     }
 
     /** Returns the new line character. */
     function char newLine() {
+        return 10;
     }
 
     /** Returns the backspace character. */
     function char backSpace() {
+        return 8;
     }
 
     /** Returns the double quote (") character. */
     function char doubleQuote() {
+        return 34;
     }
 }
