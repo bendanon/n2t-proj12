@@ -80,7 +80,28 @@ class String {
     /** Returns the integer value of this String until the first non
      *  numeric character. */
     method int intValue() {
-        return 0;
+        var int len, val;
+        var bool negative;
+        let negative = false;
+
+        if(charAt(0) = 45)
+        {
+            let negative = true;
+            let len = 1;
+        }
+
+        while(len < m_length)
+        {
+            let val = (val*10) + charAt(len) - 48;
+            let len = len + 1;
+        }
+        
+        if(negative)
+        {
+            return 0 - val;
+        }
+    
+        return val;
     }
 
     method String int2string(int n){
