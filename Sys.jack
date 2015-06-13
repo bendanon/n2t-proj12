@@ -32,7 +32,7 @@ class Sys {
 
     function void loopAsecond(){
         var int loopCount;
-        while(loopCount < 200)
+        while(loopCount < 90)
         {
             let loopCount = loopCount + 1;
         }
@@ -43,7 +43,7 @@ class Sys {
     function void wait(int duration) {
         while(0 < duration)
         {
-            do Sys.loopASecond();
+            do Sys.loopAsecond();
             let duration = duration - 1;
         }
         return;
