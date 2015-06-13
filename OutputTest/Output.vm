@@ -488,15 +488,15 @@ push constant 0
 call Output.create 12
 pop temp 0
 push constant 65
-push constant 0
-push constant 0
-push constant 0
-push constant 0
-push constant 0
-push constant 0
-push constant 0
-push constant 0
-push constant 0
+push constant 48
+push constant 120
+push constant 204
+push constant 204
+push constant 252
+push constant 204
+push constant 204
+push constant 204
+push constant 204
 push constant 0
 push constant 0
 call Output.create 12
@@ -1542,18 +1542,30 @@ goto WHILE_EXP0
 label WHILE_END0
 push constant 0
 return
-function Output.moveCursor 1
+function Output.moveCursor 0
 push argument 0
 call Output.setCursor_i 1
 pop temp 0
 push argument 1
 call Output.setCursor_j 1
 pop temp 0
-push constant 32
+call Output.clearCursorPosition 0
+pop temp 0
+push constant 0
+return
+function Output.clearCursorPosition 1
+push constant 0
 call Output.getMap 1
 pop local 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
 push local 0
 call Output.printMap 1
+pop temp 0
+push constant 0
+not
+call Screen.setColor 1
 pop temp 0
 push constant 0
 return
@@ -1597,7 +1609,7 @@ pop static 2
 label IF_END0
 push constant 0
 return
-function Output.advanceCursor 1
+function Output.advanceCursor 0
 push static 2
 push constant 1
 add
@@ -1615,11 +1627,7 @@ add
 call Output.setCursor_i 1
 pop temp 0
 label IF_FALSE0
-push constant 33
-call Output.getMap 1
-pop local 0
-push local 0
-call Output.printMap 1
+call Output.clearCursorPosition 0
 pop temp 0
 push constant 0
 return
@@ -1671,32 +1679,40 @@ pop temp 0
 push constant 0
 return
 function Output.println 0
-push static 2
+push static 1
 push constant 23
 lt
 if-goto IF_TRUE0
 goto IF_FALSE0
 label IF_TRUE0
 push constant 0
-pop static 1
-push static 2
+pop static 2
+push static 1
 push constant 1
 add
-pop static 2
+pop static 1
 label IF_FALSE0
 push constant 0
 return
 function Output.backSpace 0
-push constant 0
-push static 2
-lt
-if-goto IF_TRUE0
-goto IF_FALSE0
-label IF_TRUE0
 push static 2
 push constant 1
 sub
-pop static 2
+call Output.setCursor_j 1
+pop temp 0
+push static 2
+push constant 0
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push static 1
+push constant 1
+sub
+call Output.setCursor_i 1
+pop temp 0
 label IF_FALSE0
+call Output.clearCursorPosition 0
+pop temp 0
 push constant 0
 return
