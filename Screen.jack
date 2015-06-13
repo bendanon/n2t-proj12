@@ -7,34 +7,100 @@
  * Graphic screen library.
  */
 class Screen {
-
+	static boolean color;
+	
     /** Initializes the Screen. */
     function void init() {
+		return;
     }
 
     /** Erases the whole screen. */
     function void clearScreen() {
+		do Screen.setColor(false);
+		do Screen.drawRectangle(0, 0, 511, 255);
+		return;
     }
 
     /** Sets the color to be used in further draw commands
      *  where white = false, black = true. */
     function void setColor(boolean b) {
+		let color = b;
+		return;
     }
 
     /** Draws the (x, y) pixel. */
     function void drawPixel(int x, int y) {
+		var int address, temp, bitMask;
+		let address = ((32 * y) + (x / 16)) + 16384;
+		
+		let bitMask = 1;
+		let temp = x - ((x / 16) * 16);
+		
+		while (temp > 0) {
+			let bitMask = bitMask * 2;
+			let temp = temp - 1;
+		}
+		
+		let temp = Memory.peek(address);
+		
+		if ((temp & bitMask) = 0) { // pixel is white
+			if (color) { // expected color is black
+				let temp = temp - bitMask;
+			}
+		}
+		else { // pixel is black
+			if (~color) { // expected color is white
+				let temp = temp + bitMask;
+			}
+		}
+		
+		do Memory.poke(address, temp);
+		
+		return;
     }
 
     /** Draws a line from (x1, y1) to (x2, y2). */
     function void drawLine(int x1, int y1, int x2, int y2) {
+		var int x, y, dx, dy, a, b, diff;
+		
+		let x = x1; let y = y1;
+		let dx = x2 - x1; let dy = y2 - y1;
+		let a = 0; let b = 0;
+		
+		while ((~(a > dx)) & (~(b > dy))) {
+			do Screen.drawPixel(x + a, y + b);
+			if (diff < 0) {
+				let a = a + 1;
+				let diff = diff + dx;
+			}
+			else {
+				let b = b + 1;
+				let diff = diff -dy;
+			}
+		}
+		return;
     }
 
     /** Draws a filled rectangle where the top left corner
      *  is (x1, y1) and the bottom right corner is (x2, y2). */
     function void drawRectangle(int x1, int y1, int x2, int y2) {
+		while (y1 < (y2 + 1)) {
+			do Screen.drawLine(x2, y1, x1, y1);
+			let y1 = y1 + 1;
+		}
+		return;
     }
 
     /** Draws a filled circle of radius r around (cx, cy). */
     function void drawCircle(int cx, int cy, int r) {
+		var int dy, delta;
+		let dy = -r;
+		
+		while (dy < (r + 1)) {
+			let delta = Math.sqrt((r * r) - (dy * dy));
+			do Screen.drawLine(cx - delta, cy + dy, cx + delta, cy + dy);
+			let dy = dy + 1;
+		}
+		return;
     }
 }
