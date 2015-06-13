@@ -21,7 +21,8 @@ class Output {
     function void init() {
         do Output.initMap();
         let cursor_i = 0;
-        let cursor_j = 0;        
+        let cursor_j = 0;
+        return;        
     }
 
     // Initalizes the character map array
@@ -70,7 +71,7 @@ class Output {
         do Output.create(64,30,51,51,59,59,59,27,3,30,0,0);  // @
         do Output.create(63,30,51,51,24,12,12,0,12,12,0,0);  // ?
 
-        do Output.create(65,0,0,0,0,0,0,0,0,0,0,0);          // A ** TO BE FILLED **
+        do Output.create(65,48,120,204,204,252,204,204,204,204,0,0);          // A ** TO BE FILLED **
         do Output.create(66,31,51,51,51,31,51,51,51,31,0,0); // B
         do Output.create(67,28,54,35,3,3,3,35,54,28,0,0);    // C
         do Output.create(68,15,27,51,51,51,51,51,27,15,0,0); // D
@@ -174,38 +175,88 @@ class Output {
     }
 
     function void printMap(Array map){
-        var int mapIndex, bit, bitIndex;
+        var int mapIndex, bitIndex, bit;
+        let bit = 1;
         while(mapIndex < 11)
         {
-            while(bitIndex < 16)
+            while(bitIndex < 8)
             {
                 if(~(bit & map[mapIndex] = 0))
                 {
-                    do Screen.drawPixel(cursor_i + bitIndex, cursor_j + mapIndex);
+                    do Screen.drawPixel((cursor_j*8) + bitIndex, (cursor_i*11) + mapIndex);
                 }
-                let bit = bit+bit;
                 let bitIndex = bitIndex + 1;
+                let bit = bit + bit;
             }
-
+            let bit = 1;
+            let bitIndex = 0;
             let mapIndex = mapIndex + 1;        
         }
+        return;
     }
 
     /** Moves the cursor to the j’th column of the i’th row,
      *  and erases the character that was there. */
     function void moveCursor(int i, int j) {
-        if(~(i < 0 | 63 < i | j < 0 | 22 < j))
+        do Output.setCursor_i(i);
+        do Output.setCursor_j(j);
+        do Output.clearCursorPosition();         
+        return;
+    }
+
+    function void clearCursorPosition(){
+        var Array fullMap;
+        let fullMap = Output.getMap(0);
+        do Screen.setColor(false);
+        do Output.printMap(fullMap);
+        do Screen.setColor(true);
+        return;
+    }
+        
+    function void setCursor_i(int i){
+        if((i < 0) | (22 < i))
+        {
+            let cursor_i = 0; 
+        }
+        else
         {
             let cursor_i = i;
-            let cursor_j = j;
         }
         return;
     }
 
+    function void setCursor_j(int j){
+        if((j < 0) | (63 < j))
+        {
+            let cursor_j = 0;
+        }
+        else
+        {   
+            let cursor_j = j;
+        }
+
+        return;
+    }
+
+    function void advanceCursor(){        
+        do Output.setCursor_j(cursor_j + 1);
+        if(cursor_j = 0)
+        {
+            do Output.setCursor_i(cursor_i + 1);
+        }
+        do Output.clearCursorPosition();
+        return;
+    }
+
+
     /** Prints c at the cursor location and advances the cursor one
      *  column forward. */
     function void printChar(char c) {
-        do Output.printMap(Output.getMap(c));
+        var Array map;
+        var int i, j;
+        let map = Output.getMap(c);
+        do Output.printMap(map);
+        do Output.advanceCursor();
         return;
     }
 
@@ -216,7 +267,7 @@ class Output {
         let len = s.length();
         while(charIdx < len)
         {
-            do Output.printChar(s.chatAt(charIdx));
+            do Output.printChar(s.charAt(charIdx));
             let charIdx = charIdx + 1;
         }
         return;
@@ -226,28 +277,30 @@ class Output {
      *  cursor appropriately. */
     function void printInt(int i) {
         var String temp;
-        let temp = String.new(5);
+        let temp = String.new(6);
         do temp.setInt(i);
-        do Output.printString(s);
+        do Output.printString(temp);
         return;
     }
 
     /** Advances the cursor to the beginning of the next line. */
     function void println() {
-        if(cursor_j < 23)
+        if(cursor_i < 23)
         {
-            let cursor_i = 0;
-            let cursor_j = cursor_j + 1;
+            let cursor_j = 0;
+            let cursor_i = cursor_i + 1;
         }
         return;
     }
 
     /** Moves the cursor one column back. */
     function void backSpace() {
-        if(0 < cursor_j)
+        do Output.setCursor_j(cursor_j - 1);
+        if(cursor_j = 0)
         {
-            let cursor_j = cursor_j - 1;
+            do Output.setCursor_i(cursor_i - 1);
         }
+        do Output.clearCursorPosition();
         return;
     }
 }
